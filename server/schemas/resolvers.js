@@ -45,8 +45,10 @@ const resolvers = {
             if (context.user) {
                 const updateUser = await User.findOneAndUpdate(
                     {_id: context.user._id},
-                    {$pull: {savedBooks: {bookId: bookId}}}
-                )
+                    {$pull: {savedBooks: {bookId: bookId}}},
+                    {new: true}
+                );
+                return updateUser;
                 // saved book is an object of books so must navigate down one more level to get bookId
             }
             throw new AuthenticationError('Not logged in!');
