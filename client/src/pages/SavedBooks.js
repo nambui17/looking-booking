@@ -9,8 +9,10 @@ import { removeBookId } from '../utils/localStorage';
 import { useQuery, useMutation} from '@apollo/client';
 
 const SavedBooks = () => {
-  const { loading, userData } = useQuery(GET_ME);
-  const [deleteBook, {error}] = useMutation(REMOVE_BOOK);
+  const { loading, data } = useQuery(GET_ME);
+  const [removeBook, {error}] = useMutation(REMOVE_BOOK);
+
+  const userData = data?.me || [];
 
   if (!userData?.username) {
     return (
@@ -30,14 +32,11 @@ const SavedBooks = () => {
     }
 
     try {
-      const response = await deleteBook({
-        variables: {bookdId: bookId}
+      const {data} = await removeBook({
+        variables: {bookId}
       });
-      console.log(response);
-      if (!response.ok) {
-        throw new Error('something went wrong!');
-      }
       // upon success, remove book's id from localStorage
+
       removeBookId(bookId);
     } catch (err) {
       console.error(err);
@@ -79,7 +78,6 @@ const SavedBooks = () => {
             );
           })}
         </CardColumns>
-        {error && <div>Something went wrong</div>}
       </Container>
     </>
   );
