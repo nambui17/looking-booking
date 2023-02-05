@@ -13,7 +13,7 @@ const server = new ApolloServer({
   context: authMiddleware
 })
 
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
 // if we're in production, serve client/build as static assets
@@ -22,6 +22,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 app.get('/', (req, res) => {
+  console.log(path.join(__dirname, '../client/build/index.html'));
   res.sendFile(path.join(__dirname, '../client/build/index.html'));
 });
 
